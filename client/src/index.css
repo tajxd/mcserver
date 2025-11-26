@@ -15,11 +15,27 @@
   box-sizing: border-box;
 }
 
+html {
+  font-size: 16px;
+}
+
 body {
   background-color: #0f0f0f;
   color: #ffffff;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+video {
+  max-width: 100%;
+  height: auto;
 }
 
 .app-wrapper {
@@ -217,6 +233,10 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Responsive */
 @media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+
   .main-content {
     padding-top: 70px;
   }
@@ -226,8 +246,32 @@ h1, h2, h3, h4, h5, h6 {
     margin: 10px 0;
   }
 
-  .btn-minecraft {
+  .btn-minecraft,
+  .btn-minecraft-secondary {
     padding: 10px 20px;
     font-size: 0.9rem;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .minecraft-input {
+    width: 100%;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 13px;
+  }
+
+  .btn-minecraft,
+  .btn-minecraft-secondary {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+
+  .minecraft-card {
+    padding: 12px;
   }
 }

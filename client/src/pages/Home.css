@@ -276,6 +276,16 @@
   font-style: italic;
 }
 
+.minecraft-input {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.btn-minecraft {
+  width: 100%;
+  max-width: 100%;
+}
+
 /* Features sekcia */
 .features-section {
   padding: 100px 20px;
@@ -483,12 +493,13 @@
   }
 
   .hero-title {
-    font-size: 2rem;
+    font-size: 2.2rem;
     letter-spacing: 2px;
+    line-height: 1.2;
   }
 
   .hero-subtitle {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     letter-spacing: 1px;
   }
 
@@ -499,6 +510,7 @@
   .hero-stats {
     flex-direction: column;
     gap: 15px;
+    align-items: stretch;
   }
 
   .stat-item {
@@ -517,6 +529,12 @@
   .whitelist-highlights-row {
     flex-direction: column;
     gap: 30px;
+  }
+
+  .whitelist-upload-col,
+  .highlights-col {
+    flex: 1;
+    width: 100%;
   }
 
   .highlights-col {
@@ -601,5 +619,59 @@
   .btn-upload-highlight {
     font-size: 1rem;
     padding: 12px 20px;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+    min-height: 450px;
+    padding: 30px 10px;
+  }
+
+  .hero-title {
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .hero-description {
+    font-size: 0.9rem;
+  }
+
+  .stat-number {
+    font-size: 1.8rem;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+  }
+
+  .whitelist-highlights-section {
+    padding: 30px 10px;
+  }
+
+  .whitelist-card,
+  .upload-card {
+    padding: 20px 15px;
+  }
+
+  .section-subtitle {
+    font-size: 1.3rem;
+  }
+
+  .features-section {
+    padding: 40px 10px;
+  }
+
+  .features-section .section-title {
+    font-size: 1.6rem;
+  }
+
+  .server-info-section {
+    padding: 40px 10px;
   }
 }
