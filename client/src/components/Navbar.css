@@ -82,15 +82,38 @@
 
 @media (max-width: 768px) {
   .navbar-brand-custom {
-    font-size: 1.1rem;
+    font-size: 1rem;
+  }
+
+  .brand-text {
+    font-size: 0.9rem;
   }
 
   .nav-items {
     gap: 10px;
     margin-top: 15px;
+    width: 100%;
   }
 
   .nav-link-custom {
+    padding: 10px 12px !important;
+    font-size: 0.9rem;
+    width: 100%;
+    text-align: center;
+  }
+
+  .minecraft-navbar {
+    padding: 10px 0 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-brand-custom {
+    font-size: 0.9rem;
+  }
+
+  .nav-link-custom {
+    font-size: 0.85rem;
     padding: 8px 10px !important;
   }
 }

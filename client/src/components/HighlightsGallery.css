@@ -249,20 +249,31 @@
 
 @media (max-width: 768px) {
   .highlights-container {
-    max-height: 300px;
+    max-height: 400px;
+    padding: 12px;
   }
 
   .highlights-scroll {
-    max-height: 250px;
+    max-height: 320px;
+  }
+
+  .highlights-title h3 {
+    font-size: 0.9rem;
+  }
+
+  .highlights-count {
+    font-size: 0.75rem;
+    padding: 3px 8px;
   }
 
   .highlight-item {
     gap: 10px;
+    padding: 8px;
   }
 
   .highlight-thumbnail {
-    width: 45px;
-    height: 45px;
+    width: 50px;
+    height: 50px;
   }
 
   .highlight-title {
@@ -271,5 +282,48 @@
 
   .highlight-date {
     font-size: 0.7rem;
+  }
+
+  .highlight-meta {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .highlights-container {
+    max-height: 350px;
+    padding: 10px;
+  }
+
+  .highlights-scroll {
+    max-height: 280px;
+  }
+
+  .highlights-title h3 {
+    font-size: 0.85rem;
+  }
+
+  .highlight-thumbnail {
+    width: 45px;
+    height: 45px;
+  }
+
+  .highlight-title {
+    font-size: 0.75rem;
+  }
+
+  .highlight-date {
+    font-size: 0.65rem;
+  }
+
+  .modal-body-custom {
+    padding: 15px;
+  }
+
+  .highlight-description {
+    font-size: 0.85rem;
+    padding: 10px;
   }
 }

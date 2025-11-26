@@ -119,14 +119,57 @@
 
 @media (max-width: 768px) {
   .poll-widget {
-    padding: 20px;
+    padding: 15px;
   }
 
   .poll-title {
     font-size: 1.1rem;
   }
 
+  .poll-option {
+    padding: 12px;
+  }
+
   .poll-option-text {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
+  }
+
+  .poll-option-votes {
+    font-size: 0.85rem;
+  }
+
+  .poll-footer {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .poll-widget {
+    padding: 12px;
+  }
+
+  .poll-title {
+    font-size: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .poll-option {
+    padding: 10px;
+  }
+
+  .poll-option-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .poll-option-text {
+    font-size: 0.85rem;
+  }
+
+  .poll-percentage {
+    font-size: 0.8rem;
   }
 }
