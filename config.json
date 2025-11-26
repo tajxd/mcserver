@@ -1,0 +1,44 @@
+{
+  "dev": {
+    "frontend": {
+      "port": 3000,
+      "url": "http://localhost:3000"
+    },
+    "backend": {
+      "port": 5000,
+      "url": "http://localhost:5000"
+    }
+  },
+  "admin": {
+    "username": "Admin",
+    "password": "mcserver256i"
+  },
+  "server": {
+    "name": "SPŠE Minecraft SMP",
+    "version": "1.21.10",
+    "maxPlayers": 67,
+    "ip": "mcserver.sk"
+  },
+  "features": [
+    {
+      "title": "Survival SMP",
+      "description": "Čistý survival s vlastnými pravidlami",
+      "icon": "fa-cube"
+    },
+    {
+      "title": "Bezpečnosť",
+      "description": "Ochrana pred hackermi a cheátmi",
+      "icon": "fa-shield"
+    },
+    {
+      "title": "Výkonnajúci",
+      "description": "Optimalizovaný server bez lagovania",
+      "icon": "fa-zap"
+    },
+    {
+      "title": "Eventy",
+      "description": "Pravidelné PvP turnaje a iné eventy",
+      "icon": "fa-trophy"
+    }
+  ]
+}
