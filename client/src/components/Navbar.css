@@ -1,0 +1,96 @@
+.minecraft-navbar {
+  background: linear-gradient(90deg, var(--mc-dark-green) 0%, var(--mc-green) 100%) !important;
+  border-bottom: 4px solid var(--mc-bright-green);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+  padding: 15px 0 !important;
+}
+
+.navbar-brand-custom {
+  font-weight: bold;
+  color: var(--mc-bright-green) !important;
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  transition: all 0.3s ease;
+  animation: glow 3s ease-in-out infinite;
+}
+
+.brand-text {
+  color: var(--mc-bright-green);
+}
+
+.navbar-brand-custom:hover {
+  transform: scale(1.05);
+  color: var(--mc-gold) !important;
+}
+
+.nav-items {
+  gap: 25px;
+}
+
+.nav-link-custom {
+  color: #fff !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 8px 15px !important;
+  border-radius: 4px;
+}
+
+.nav-link-custom:hover {
+  color: var(--mc-bright-green) !important;
+  background: rgba(63, 181, 73, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(63, 181, 73, 0.3);
+}
+
+.nav-link-custom i {
+  margin-right: 8px;
+}
+
+.nav-link-admin {
+  background: linear-gradient(145deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+  border: 2px solid rgba(255, 215, 0, 0.4);
+}
+
+.nav-link-admin:hover {
+  background: linear-gradient(145deg, rgba(255, 215, 0, 0.4), rgba(255, 215, 0, 0.2));
+  color: var(--mc-gold) !important;
+  border-color: var(--mc-gold);
+}
+
+.navbar-toggler {
+  border-color: var(--mc-bright-green) !important;
+  color: var(--mc-bright-green) !important;
+}
+
+.navbar-toggler:focus {
+  box-shadow: 0 0 8px rgba(63, 181, 73, 0.5) !important;
+}
+
+@keyframes glow {
+  0%, 100% {
+    text-shadow: 0 0 5px rgba(63, 181, 73, 0.5), 2px 2px 4px rgba(0, 0, 0, 0.8);
+  }
+  50% {
+    text-shadow: 0 0 15px rgba(63, 181, 73, 1), 2px 2px 4px rgba(0, 0, 0, 0.8);
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-brand-custom {
+    font-size: 1.1rem;
+  }
+
+  .nav-items {
+    gap: 10px;
+    margin-top: 15px;
+  }
+
+  .nav-link-custom {
+    padding: 8px 10px !important;
+  }
+}

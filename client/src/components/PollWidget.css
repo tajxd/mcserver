@@ -1,0 +1,132 @@
+.poll-widget {
+  margin: 20px 0;
+  padding: 25px;
+  background: linear-gradient(145deg, #0a1f14, #0d2519);
+  border: 2px solid #18a558;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.poll-title {
+  color: #18a558;
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.poll-title i {
+  font-size: 1.5rem;
+}
+
+.poll-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.poll-option {
+  background: rgba(24, 165, 88, 0.1);
+  border: 2px solid rgba(24, 165, 88, 0.3);
+  border-radius: 8px;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.poll-option:not(.disabled):hover {
+  background: rgba(24, 165, 88, 0.2);
+  border-color: #18a558;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(24, 165, 88, 0.3);
+}
+
+.poll-option.disabled {
+  cursor: default;
+}
+
+.poll-option.selected {
+  border-color: #3fb549;
+  background: rgba(63, 181, 73, 0.15);
+}
+
+.poll-option-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.poll-option-text {
+  color: #e8e8e8;
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.poll-option-votes {
+  color: #18a558;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.poll-progress-bar {
+  position: relative;
+  width: 100%;
+  height: 25px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.poll-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #18a558, #3fb549);
+  transition: width 0.6s ease;
+  border-radius: 12px;
+  position: relative;
+}
+
+.poll-percentage {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  z-index: 1;
+}
+
+.poll-footer {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(24, 165, 88, 0.3);
+  color: #b0b0b0;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.poll-footer i {
+  color: #18a558;
+}
+
+@media (max-width: 768px) {
+  .poll-widget {
+    padding: 20px;
+  }
+
+  .poll-title {
+    font-size: 1.1rem;
+  }
+
+  .poll-option-text {
+    font-size: 0.95rem;
+  }
+}

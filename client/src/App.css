@@ -1,0 +1,21 @@
+/* App CSS */
+.minecraft-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.section-title {
+  color: var(--mc-bright-green);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 40px 0 30px 0;
+  font-size: 2.5rem;
+  font-weight: bold;
+  animation: glow 2s ease-in-out infinite;
+}
+
+.row-gap {
+  gap: 20px;
+}
