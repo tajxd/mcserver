@@ -34,6 +34,7 @@ function offlineUUID(name) {
 app.use(cors({
   origin: [
     'http://localhost:3000',
+    'https://mcserver-navy.vercel.app',
     process.env.FRONTEND_URL || '*'
   ],
   credentials: true
@@ -312,11 +313,12 @@ app.post('/api/highlights', express.json({ limit: '100mb' }), async (req, res) =
     fs.writeFileSync(filePath, buffer);
 
     // Vytvorenie záznamu
+    const baseUrl = process.env.BACKEND_URL || 'https://mcserver-backend.up.railway.app';
     const highlight = new Highlights({
       title,
       description,
       fileType,
-      filePath: `http://localhost:5000/uploads/${timestamp}-${fileName}`,
+      filePath: `${baseUrl}/uploads/${timestamp}-${fileName}`,
       uploadedBy: uploadedBy || 'Anonymous',
       featured: false
     });
