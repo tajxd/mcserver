@@ -13,7 +13,7 @@ export default function HighlightsGallery() {
   const fetchHighlights = async () => {
     try {
       const response = await axios.get(`${API_URL}/api/highlights`);
-      setHighlights(response.data);
+      setHighlights(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Failed to fetch highlights:', error);
       setHighlights([]);

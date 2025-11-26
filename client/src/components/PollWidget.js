@@ -46,7 +46,7 @@ export default function PollWidget() {
     }
   };
 
-  if (!poll) {
+  if (!poll || !poll.options || poll.options.length === 0) {
     return null;
   }
 
