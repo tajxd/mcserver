@@ -48,10 +48,25 @@ if (!fs.existsSync('uploads')) {
   fs.mkdirSync('uploads');
 }
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI)
+// MongoDB Connection with better error handling
+mongoose.connect(process.env.MONGODB_URI, {
+  serverSelectionTimeoutMS: 5000,
+  socketTimeoutMS: 45000,
+})
   .then(() => console.log('MongoDB Connected'))
-  .catch(err => console.error('MongoDB Connection Error:', err));
+  .catch(err => {
+    console.error('MongoDB Connection Error:', err);
+    process.exit(1);
+  });
+
+// Handle MongoDB connection events
+mongoose.connection.on('disconnected', () => {
+  console.log('MongoDB disconnected. Attempting to reconnect...');
+});
+
+mongoose.connection.on('error', (err) => {
+  console.error('MongoDB connection error:', err);
+});
 
 // Whitelist Schema
 const whitelistSchema = new mongoose.Schema({
