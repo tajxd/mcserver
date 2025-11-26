@@ -313,7 +313,7 @@ app.post('/api/highlights', express.json({ limit: '100mb' }), async (req, res) =
     fs.writeFileSync(filePath, buffer);
 
     // Vytvorenie záznamu
-    const baseUrl = process.env.BACKEND_URL || 'https://mcserver-backend.up.railway.app';
+    const baseUrl = process.env.BACKEND_URL || 'https://mcserver-production-23af.up.railway.app';
     const highlight = new Highlights({
       title,
       description,
