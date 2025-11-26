@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Alert, Modal } from 'react-bootstrap';
 import axios from 'axios';
+import { API_URL } from '../config';
 import HighlightsGallery from '../components/HighlightsGallery';
 import HighlightsUpload from '../components/HighlightsUpload';
 import PollWidget from '../components/PollWidget';
@@ -24,7 +25,7 @@ export default function Home({ whitelist, onWhitelistUpdate }) {
     setLoading(true);
 
     try {
-      const response = await axios.post('/api/whitelist', { minecraftName });
+      const response = await axios.post(`${API_URL}/api/whitelist`, { minecraftName });
       setMessageType('success');
       setMessage(response.data.message);
       setMinecraftName('');

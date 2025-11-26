@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Alert } from 'react-bootstrap';
 import axios from 'axios';
+import { API_URL } from '../config';
 import './HighlightsUpload.css';
 
 export default function HighlightsUpload({ onUploadSuccess }) {
@@ -80,7 +81,7 @@ export default function HighlightsUpload({ onUploadSuccess }) {
 
       const fileType = file.startsWith('data:image/') ? 'image' : 'video';
 
-      await axios.post('/api/highlights', {
+      await axios.post(`${API_URL}/api/highlights`, {
         title,
         description,
         fileType,

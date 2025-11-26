@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import axios from 'axios';
 import './App.css';
+import { API_URL } from './config';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Rules from './pages/Rules';
@@ -14,7 +15,7 @@ function App() {
 
   const fetchWhitelist = async () => {
     try {
-      const response = await axios.get('/api/whitelist');
+      const response = await axios.get(`${API_URL}/api/whitelist`);
       setWhitelist(response.data);
     } catch (error) {
       console.error('Chyba pri načítaní whiteliste:', error);

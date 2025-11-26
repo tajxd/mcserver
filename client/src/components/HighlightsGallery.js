@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal } from 'react-bootstrap';
 import axios from 'axios';
+import { API_URL } from '../config';
 import './HighlightsGallery.css';
 
 export default function HighlightsGallery() {
@@ -11,7 +12,7 @@ export default function HighlightsGallery() {
 
   const fetchHighlights = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/highlights');
+      const response = await axios.get(`${API_URL}/api/highlights`);
       setHighlights(response.data);
     } catch (error) {
       console.error('Failed to fetch highlights:', error);
@@ -30,7 +31,7 @@ export default function HighlightsGallery() {
     // Ak už obsahuje http, vráť ako je
     if (filePath.startsWith('http')) return filePath;
     // Inak pridaj backend URL
-    return `http://localhost:5000${filePath}`;
+    return `${API_URL}${filePath}`;
   };
 
   const handleShowModal = (highlight) => {

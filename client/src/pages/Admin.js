@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Alert, Table, Modal } from 'react-bootstrap';
 import axios from 'axios';
+import { API_URL } from '../config';
 import './Admin.css';
 
 export default function Admin({ whitelist, onWhitelistUpdate }) {
@@ -22,7 +23,7 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
   const getFilePath = (filePath) => {
     if (!filePath) return '';
     if (filePath.startsWith('http')) return filePath;
-    return `http://localhost:5000${filePath}`;
+    return `${API_URL}${filePath}`;
   };
 
   const handleLogin = async (e) => {
@@ -30,7 +31,7 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
     setLoading(true);
 
     try {
-      await axios.post('/api/admin/login', { username, password });
+      await axios.post(`${API_URL}/api/admin/login`, { username, password });
       setIsAuthenticated(true);
       setMessage('');
       setUsername('');
@@ -50,7 +51,7 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
     }
 
     try {
-      await axios.post(`/api/admin/whitelist/${id}`, { 
+      await axios.post(`${API_URL}/api/admin/whitelist/${id}`, { 
         username: process.env.REACT_APP_ADMIN_USERNAME || 'Admin',
         password: process.env.REACT_APP_ADMIN_PASSWORD || 'mcserver256i'
       });
@@ -67,7 +68,7 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
 
   const fetchHighlights = async () => {
     try {
-      const response = await axios.get('/api/highlights/pending/all', {
+      const response = await axios.get(`${API_URL}/api/highlights/pending/all`, {
         params: {
           username: 'Admin',
           password: 'mcserver256i'
@@ -82,7 +83,7 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
 
   const fetchPolls = async () => {
     try {
-      const response = await axios.get('/api/polls', {
+      const response = await axios.get(`${API_URL}/api/polls`, {
         params: {
           username: 'Admin',
           password: 'mcserver256i'
@@ -96,7 +97,7 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
 
   const handleApproveHighlight = async (id) => {
     try {
-      await axios.post(`/api/highlights/${id}/approve`, {
+      await axios.post(`${API_URL}/api/highlights/${id}/approve`, {
         username: 'Admin',
         password: 'mcserver256i'
       });
@@ -117,7 +118,7 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
     }
 
     try {
-      await axios.delete(`/api/highlights/${id}`, {
+      await axios.delete(`${API_URL}/api/highlights/${id}`, {
         data: {
           username: 'Admin',
           password: 'mcserver256i'
@@ -143,7 +144,7 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
     }
 
     try {
-      await axios.post('/api/polls', {
+      await axios.post(`${API_URL}/api/polls`, {
         username: 'Admin',
         password: 'mcserver256i',
         question: pollQuestion,
@@ -170,7 +171,7 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
     }
 
     try {
-      await axios.delete(`/api/polls/${id}`, {
+      await axios.delete(`${API_URL}/api/polls/${id}`, {
         data: {
           username: 'Admin',
           password: 'mcserver256i'

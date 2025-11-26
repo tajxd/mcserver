@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_URL } from '../config';
 import './PollWidget.css';
 
 export default function PollWidget() {
@@ -13,7 +14,7 @@ export default function PollWidget() {
 
   const fetchActivePoll = async () => {
     try {
-      const response = await axios.get('/api/polls/active');
+      const response = await axios.get(`${API_URL}/api/polls/active`);
       setPoll(response.data);
       
       // Skontroluj localStorage či už hlasoval
@@ -30,7 +31,7 @@ export default function PollWidget() {
     if (hasVoted || !poll) return;
 
     try {
-      const response = await axios.post(`/api/polls/${poll._id}/vote`, {
+      const response = await axios.post(`${API_URL}/api/polls/${poll._id}/vote`, {
         optionIndex
       });
       
