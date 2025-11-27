@@ -7,10 +7,35 @@ export default function PollWidget() {
   const [poll, setPoll] = useState(null);
   const [hasVoted, setHasVoted] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
+  const [timeRemaining, setTimeRemaining] = useState(null);
+  const [pollEnded, setPollEnded] = useState(false);
 
   useEffect(() => {
     fetchActivePoll();
   }, []);
+
+  useEffect(() => {
+    if (!poll || !poll.endsAt) return;
+
+    const timer = setInterval(() => {
+      const now = new Date().getTime();
+      const endTime = new Date(poll.endsAt).getTime();
+      const distance = endTime - now;
+
+      if (distance < 0) {
+        clearInterval(timer);
+        setTimeRemaining(null);
+        setPollEnded(true);
+      } else {
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        setTimeRemaining({ hours, minutes, seconds });
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [poll]);
 
   const fetchActivePoll = async () => {
     try {
@@ -21,6 +46,11 @@ export default function PollWidget() {
       if (response.data) {
         const voted = localStorage.getItem(`poll_voted_${response.data._id}`);
         setHasVoted(!!voted);
+        
+        // Skontroluj či poll skončil
+        if (response.data.endsAt && new Date() > new Date(response.data.endsAt)) {
+          setPollEnded(true);
+        }
       }
     } catch (error) {
       console.error('Chyba pri načítaní poll:', error);
@@ -28,7 +58,7 @@ export default function PollWidget() {
   };
 
   const handleVote = async (optionIndex) => {
-    if (hasVoted || !poll) return;
+    if (hasVoted || !poll || pollEnded) return;
 
     try {
       const response = await axios.post(`${API_URL}/api/polls/${poll._id}/vote`, {
@@ -51,12 +81,30 @@ export default function PollWidget() {
   }
 
   const totalVotes = poll.options.reduce((sum, opt) => sum + opt.votes, 0);
+  const canVote = !hasVoted && !pollEnded;
+  const showVoteResults = hasVoted || poll.showResults || pollEnded;
 
   return (
     <div className="poll-widget minecraft-card">
       <h3 className="poll-title">
         <i className="fas fa-poll"></i> {poll.question}
       </h3>
+
+      {/* Countdown Timer */}
+      {poll.endsAt && timeRemaining && !pollEnded && (
+        <div className="poll-countdown">
+          <i className="fas fa-clock"></i> Zostáva:{' '}
+          <strong>
+            {timeRemaining.hours}h {timeRemaining.minutes}m {timeRemaining.seconds}s
+          </strong>
+        </div>
+      )}
+
+      {pollEnded && (
+        <div className="poll-ended-badge">
+          <i className="fas fa-flag-checkered"></i> Hlasovanie skončilo
+        </div>
+      )}
 
       <div className="poll-options">
         {poll.options.map((option, index) => {
@@ -66,19 +114,19 @@ export default function PollWidget() {
           return (
             <div 
               key={index} 
-              className={`poll-option ${hasVoted ? 'disabled' : ''} ${isSelected ? 'selected' : ''}`}
-              onClick={() => !hasVoted && handleVote(index)}
+              className={`poll-option ${!canVote ? 'disabled' : ''} ${isSelected ? 'selected' : ''} ${pollEnded ? 'ended' : ''}`}
+              onClick={() => canVote && handleVote(index)}
             >
               <div className="poll-option-content">
                 <span className="poll-option-text">{option.text}</span>
-                {hasVoted && (
+                {showVoteResults && (
                   <span className="poll-option-votes">
                     {option.votes} {option.votes === 1 ? 'hlas' : 'hlasov'}
                   </span>
                 )}
               </div>
               
-              {hasVoted && (
+              {showVoteResults && (
                 <div className="poll-progress-bar">
                   <div 
                     className="poll-progress-fill" 
@@ -92,13 +140,19 @@ export default function PollWidget() {
         })}
       </div>
 
-      {hasVoted && (
+      {hasVoted && !pollEnded && (
         <div className="poll-footer">
           <i className="fas fa-check-circle"></i> Ďakujeme za tvoj hlas! Celkovo hlasov: {totalVotes}
         </div>
       )}
 
-      {!hasVoted && (
+      {pollEnded && (
+        <div className="poll-footer ended">
+          <i className="fas fa-flag-checkered"></i> Hlasovanie ukončené. Celkovo hlasov: {totalVotes}
+        </div>
+      )}
+
+      {!hasVoted && !pollEnded && (
         <div className="poll-footer">
           <i className="fas fa-hand-pointer"></i> Klikni na možnosť pre hlasovanie. Tvoj hlas nemôže byť zmenený.
         </div>

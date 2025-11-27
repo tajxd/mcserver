@@ -150,7 +150,15 @@ const pollSchema = new mongoose.Schema({
   },
   voters: [{
     type: String // IP address alebo identifikátor
-  }]
+  }],
+  endsAt: {
+    type: Date,
+    default: null
+  },
+  showResults: {
+    type: Boolean,
+    default: false
+  }
 });
 
 const Poll = mongoose.model('Poll', pollSchema);
@@ -398,7 +406,7 @@ app.get('/api/polls', async (req, res) => {
 
 app.post('/api/polls', async (req, res) => {
   try {
-    const { username, password, question, options } = req.body;
+    const { username, password, question, options, duration } = req.body;
     
     if (username !== process.env.ADMIN_USERNAME || password !== process.env.ADMIN_PASSWORD) {
       return res.status(401).json({ error: 'Nesprávne prihlasovacie údaje' });
@@ -407,10 +415,14 @@ app.post('/api/polls', async (req, res) => {
     // Deaktivuj všetky staré polls
     await Poll.updateMany({}, { active: false });
 
+    const endsAt = duration ? new Date(Date.now() + duration * 60 * 60 * 1000) : null;
+
     const poll = new Poll({
       question,
       options: options.map(opt => ({ text: opt, votes: 0 })),
-      createdBy: username
+      createdBy: username,
+      endsAt,
+      showResults: false
     });
 
     await poll.save();
@@ -429,6 +441,11 @@ app.post('/api/polls/:id/vote', async (req, res) => {
     
     if (!poll || !poll.active) {
       return res.status(404).json({ error: 'Poll nie je aktívny' });
+    }
+
+    // Skontroluj či poll už skončil
+    if (poll.endsAt && new Date() > poll.endsAt) {
+      return res.status(400).json({ error: 'Hlasovanie už skončilo!' });
     }
 
     // Skontroluj či už hlasoval
@@ -457,6 +474,29 @@ app.delete('/api/polls/:id', async (req, res) => {
 
     await Poll.findByIdAndDelete(req.params.id);
     res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Toggle show results for poll
+app.patch('/api/polls/:id/toggle-results', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    
+    if (username !== process.env.ADMIN_USERNAME || password !== process.env.ADMIN_PASSWORD) {
+      return res.status(401).json({ error: 'Nesprávne prihlasovacie údaje' });
+    }
+
+    const poll = await Poll.findById(req.params.id);
+    if (!poll) {
+      return res.status(404).json({ error: 'Poll nenájdený' });
+    }
+
+    poll.showResults = !poll.showResults;
+    await poll.save();
+    
+    res.json({ success: true, data: poll });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

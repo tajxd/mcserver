@@ -19,6 +19,7 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
   const [showPollModal, setShowPollModal] = useState(false);
   const [pollQuestion, setPollQuestion] = useState('');
   const [pollOptions, setPollOptions] = useState(['', '']);
+  const [pollDuration, setPollDuration] = useState(''); // v hodinách
 
   const getFilePath = (filePath) => {
     if (!filePath) return '';
@@ -148,7 +149,8 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
         username: 'Admin',
         password: 'mcserver256i',
         question: pollQuestion,
-        options: validOptions
+        options: validOptions,
+        duration: pollDuration ? parseFloat(pollDuration) : null
       });
       
       setMessageType('success');
@@ -156,6 +158,7 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
       setShowPollModal(false);
       setPollQuestion('');
       setPollOptions(['', '']);
+      setPollDuration('');
       fetchPolls();
       setTimeout(() => setMessage(''), 5000);
     } catch (error) {
@@ -185,6 +188,24 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
     } catch (error) {
       setMessageType('danger');
       setMessage('Chyba pri mazaní poll');
+      setTimeout(() => setMessage(''), 5000);
+    }
+  };
+
+  const handleTogglePollResults = async (id) => {
+    try {
+      await axios.patch(`${API_URL}/api/polls/${id}/toggle-results`, {
+        username: 'Admin',
+        password: 'mcserver256i'
+      });
+      
+      setMessageType('success');
+      setMessage('Zobrazenie výsledkov zmenené!');
+      fetchPolls();
+      setTimeout(() => setMessage(''), 5000);
+    } catch (error) {
+      setMessageType('danger');
+      setMessage('Chyba pri zmene zobrazenia výsledkov');
       setTimeout(() => setMessage(''), 5000);
     }
   };
@@ -334,14 +355,37 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
                 <div className="polls-list">
                   {polls.map((poll) => {
                     const totalVotes = poll.options.reduce((sum, opt) => sum + opt.votes, 0);
+                    const pollEnded = poll.endsAt && new Date() > new Date(poll.endsAt);
                     return (
-                      <div key={poll._id} className={`poll-item ${poll.active ? 'active-poll' : 'inactive-poll'}`}>
+                      <div key={poll._id} className={`poll-item ${poll.active ? 'active-poll' : 'inactive-poll'} ${pollEnded ? 'ended-poll' : ''}`}>
                         <div className="poll-header">
                           <h4>{poll.question}</h4>
-                          <span className={`poll-badge ${poll.active ? 'badge-active' : 'badge-inactive'}`}>
-                            {poll.active ? 'Aktívny' : 'Neaktívny'}
-                          </span>
+                          <div className="poll-badges">
+                            <span className={`poll-badge ${poll.active ? 'badge-active' : 'badge-inactive'}`}>
+                              {poll.active ? 'Aktívny' : 'Neaktívny'}
+                            </span>
+                            {pollEnded && (
+                              <span className="poll-badge badge-ended">
+                                <i className="fas fa-flag-checkered"></i> Skončené
+                              </span>
+                            )}
+                            {poll.showResults && (
+                              <span className="poll-badge badge-results">
+                                <i className="fas fa-eye"></i> Výsledky viditeľné
+                              </span>
+                            )}
+                          </div>
                         </div>
+                        {poll.endsAt && (
+                          <div className="poll-timer-info">
+                            <i className="fas fa-clock"></i> 
+                            {pollEnded ? (
+                              <span className="text-danger"> Skončilo: {new Date(poll.endsAt).toLocaleString('sk-SK')}</span>
+                            ) : (
+                              <span className="text-warning"> Končí: {new Date(poll.endsAt).toLocaleString('sk-SK')}</span>
+                            )}
+                          </div>
+                        )}
                         <div className="poll-options-list">
                           {poll.options.map((option, idx) => {
                             const percentage = totalVotes > 0 ? ((option.votes / totalVotes) * 100).toFixed(1) : 0;
@@ -357,12 +401,22 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
                         </div>
                         <div className="poll-footer-info">
                           <span><i className="fas fa-users"></i> Celkom hlasov: {totalVotes}</span>
-                          <button
-                            className="btn btn-sm btn-danger"
-                            onClick={() => handleDeletePoll(poll._id)}
-                          >
-                            <i className="fas fa-trash"></i> Vymazať
-                          </button>
+                          <div className="poll-actions">
+                            <button
+                              className={`btn btn-sm ${poll.showResults ? 'btn-warning' : 'btn-success'}`}
+                              onClick={() => handleTogglePollResults(poll._id)}
+                              title={poll.showResults ? 'Skryť výsledky' : 'Zobraziť výsledky'}
+                            >
+                              <i className={`fas ${poll.showResults ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                              {poll.showResults ? ' Skryť výsledky' : ' Zobraziť výsledky'}
+                            </button>
+                            <button
+                              className="btn btn-sm btn-danger"
+                              onClick={() => handleDeletePoll(poll._id)}
+                            >
+                              <i className="fas fa-trash"></i> Vymazať
+                            </button>
+                          </div>
                         </div>
                       </div>
                     );
@@ -694,6 +748,24 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
             >
               <i className="fas fa-plus"></i> Pridať možnosť
             </button>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">
+              <i className="fas fa-clock"></i> Časový limit (voliteľné)
+            </label>
+            <input
+              type="number"
+              className="minecraft-input form-control"
+              placeholder="Počet hodín (nechaj prázdne pre neobmedzené)"
+              value={pollDuration}
+              onChange={(e) => setPollDuration(e.target.value)}
+              min="0"
+              step="0.5"
+            />
+            <small className="form-text">
+              Zadaj počet hodín, po ktorých sa hlasovanie automaticky ukončí
+            </small>
           </div>
 
           <button
