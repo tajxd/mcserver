@@ -47,7 +47,7 @@ video {
 
 .main-content {
   flex: 1;
-  padding-top: 80px;
+  padding-top: 0;
 }
 
 /* Animace */
