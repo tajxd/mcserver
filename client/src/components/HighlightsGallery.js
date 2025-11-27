@@ -32,8 +32,14 @@ export default function HighlightsGallery() {
     if (!filePath) return '';
     // Ak už obsahuje http, vráť ako je
     if (filePath.startsWith('http')) return filePath;
-    // Inak pridaj backend URL
-    const fullPath = `${API_URL}${filePath}`;
+    // Ak path začína s /, priamo pridaj API_URL
+    if (filePath.startsWith('/')) {
+      const fullPath = `${API_URL}${filePath}`;
+      console.log('Generated file path:', fullPath);
+      return fullPath;
+    }
+    // Inak pridaj /uploads/ pred cestu
+    const fullPath = `${API_URL}/uploads/${filePath}`;
     console.log('Generated file path:', fullPath);
     return fullPath;
   };
