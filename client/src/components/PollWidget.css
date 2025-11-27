@@ -31,6 +31,12 @@
   margin-left: auto;
 }
 
+.poll-status-badge.active-badge {
+  background: rgba(24, 165, 88, 0.2);
+  color: #18a558;
+  border: 1px solid rgba(24, 165, 88, 0.5);
+}
+
 .poll-status-badge.inactive-badge {
   background: rgba(176, 176, 176, 0.3);
   color: #b0b0b0;

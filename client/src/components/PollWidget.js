@@ -110,7 +110,11 @@ export default function PollWidget({ pollId }) {
     <div className={`poll-widget minecraft-card ${!poll.active ? 'inactive-poll' : ''}`}>
       <h3 className="poll-title">
         <i className="fas fa-poll"></i> {poll.question}
-        {!poll.active && (
+        {poll.active ? (
+          <span className="poll-status-badge active-badge">
+            <i className="fas fa-circle-dot"></i> Aktívne
+          </span>
+        ) : (
           <span className="poll-status-badge inactive-badge">
             <i className="fas fa-archive"></i> Neaktívne
           </span>
