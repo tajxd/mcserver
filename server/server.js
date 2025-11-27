@@ -388,10 +388,16 @@ app.get('/api/polls/active', async (req, res) => {
   }
 });
 
-// Verejný endpoint: Získať všetky aktívne polly
+// Verejný endpoint: Získať všetky aktívne polly a ukončené s viditeľnými výsledkami
 app.get('/api/polls/public/all', async (req, res) => {
   try {
-    const polls = await Poll.find({ active: true }).sort({ createdAt: -1 });
+    // Zobraz aktívne hlasovania ALEBO neaktívne ktoré majú showResults = true
+    const polls = await Poll.find({
+      $or: [
+        { active: true },
+        { showResults: true }
+      ]
+    }).sort({ createdAt: -1 });
     res.json(polls);
   } catch (error) {
     res.status(500).json({ error: error.message });

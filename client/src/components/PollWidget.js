@@ -107,9 +107,14 @@ export default function PollWidget({ pollId }) {
   const showVoteResults = hasVoted || poll.showResults || pollEnded;
 
   return (
-    <div className="poll-widget minecraft-card">
+    <div className={`poll-widget minecraft-card ${!poll.active ? 'inactive-poll' : ''}`}>
       <h3 className="poll-title">
         <i className="fas fa-poll"></i> {poll.question}
+        {!poll.active && (
+          <span className="poll-status-badge inactive-badge">
+            <i className="fas fa-archive"></i> Neaktívne
+          </span>
+        )}
       </h3>
 
       {/* Countdown Timer */}

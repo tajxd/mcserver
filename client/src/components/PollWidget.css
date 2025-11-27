@@ -6,6 +6,12 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
 
+.poll-widget.inactive-poll {
+  border-color: rgba(176, 176, 176, 0.4);
+  opacity: 0.85;
+  background: linear-gradient(145deg, #0a1410, #0d1915);
+}
+
 .poll-title {
   color: #18a558;
   font-size: 1.3rem;
@@ -14,6 +20,21 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-wrap: wrap;
+}
+
+.poll-status-badge {
+  font-size: 0.75rem;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  margin-left: auto;
+}
+
+.poll-status-badge.inactive-badge {
+  background: rgba(176, 176, 176, 0.3);
+  color: #b0b0b0;
+  border: 1px solid rgba(176, 176, 176, 0.5);
 }
 
 .poll-title i {
