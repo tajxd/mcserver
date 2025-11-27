@@ -27,8 +27,12 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
 
   const getFilePath = (filePath) => {
     if (!filePath) return '';
-    if (filePath.startsWith('http')) return filePath;
-    return `${API_URL}${filePath}`;
+    // Ak už obsahuje plnú URL, vráť ako je
+    if (filePath.startsWith('http://') || filePath.startsWith('https://')) return filePath;
+    // Ak začína s /, pridaj API_URL
+    if (filePath.startsWith('/')) return `${API_URL}${filePath}`;
+    // Inak pridaj /uploads/
+    return `${API_URL}/uploads/${filePath}`;
   };
 
   const handleLogin = async (e) => {

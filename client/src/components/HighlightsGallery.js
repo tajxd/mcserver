@@ -33,20 +33,20 @@ export default function HighlightsGallery() {
       console.error('No filePath provided');
       return '';
     }
-    // Ak už obsahuje http, vráť ako je
-    if (filePath.startsWith('http')) {
-      console.log('Full URL path:', filePath);
+    // Ak už obsahuje http, vráť ako je (plná URL uložená v DB)
+    if (filePath.startsWith('http://') || filePath.startsWith('https://')) {
+      console.log('Full URL path (from DB):', filePath);
       return filePath;
     }
-    // Ak path začína s /, priamo pridaj API_URL (už obsahuje /uploads/)
+    // Ak path začína s /, priamo pridaj API_URL (relatívna cesta)
     if (filePath.startsWith('/')) {
       const fullPath = `${API_URL}${filePath}`;
-      console.log('Generated file path:', fullPath);
+      console.log('Generated path from relative:', fullPath);
       return fullPath;
     }
-    // Inak pridaj /uploads/ pred cestu
+    // Inak pridaj /uploads/ pred cestu (len názov súboru)
     const fullPath = `${API_URL}/uploads/${filePath}`;
-    console.log('Generated file path with /uploads/:', fullPath);
+    console.log('Generated path from filename:', fullPath);
     return fullPath;
   };
 
