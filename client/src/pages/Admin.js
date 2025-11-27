@@ -195,8 +195,8 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
   const handleTogglePollResults = async (id) => {
     try {
       await axios.patch(`${API_URL}/api/polls/${id}/toggle-results`, {
-        username: 'Admin',
-        password: 'mcserver256i'
+        username,
+        password
       });
       
       setMessageType('success');
@@ -205,7 +205,7 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
       setTimeout(() => setMessage(''), 5000);
     } catch (error) {
       setMessageType('danger');
-      setMessage('Chyba pri zmene zobrazenia výsledkov');
+      setMessage(error.response?.data?.error || 'Chyba pri zmene zobrazenia výsledkov');
       setTimeout(() => setMessage(''), 5000);
     }
   };
