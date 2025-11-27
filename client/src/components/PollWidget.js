@@ -3,7 +3,7 @@ import axios from 'axios';
 import { API_URL } from '../config';
 import './PollWidget.css';
 
-export default function PollWidget() {
+export default function PollWidget({ pollId }) {
   const [poll, setPoll] = useState(null);
   const [hasVoted, setHasVoted] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -11,8 +11,12 @@ export default function PollWidget() {
   const [pollEnded, setPollEnded] = useState(false);
 
   useEffect(() => {
-    fetchActivePoll();
-  }, []);
+    if (pollId) {
+      fetchPollById(pollId);
+    } else {
+      fetchActivePoll();
+    }
+  }, [pollId]);
 
   useEffect(() => {
     if (!poll || !poll.endsAt) return;
@@ -51,6 +55,24 @@ export default function PollWidget() {
         if (response.data.endsAt && new Date() > new Date(response.data.endsAt)) {
           setPollEnded(true);
         }
+      }
+    } catch (error) {
+      console.error('Chyba pri načítaní poll:', error);
+    }
+  };
+
+  const fetchPollById = async (id) => {
+    try {
+      const response = await axios.get(`${API_URL}/api/polls/${id}`);
+      setPoll(response.data);
+      
+      // Skontroluj localStorage či už hlasoval
+      const voted = localStorage.getItem(`poll_voted_${response.data._id}`);
+      setHasVoted(!!voted);
+      
+      // Skontroluj či poll skončil
+      if (response.data.endsAt && new Date() > new Date(response.data.endsAt)) {
+        setPollEnded(true);
       }
     } catch (error) {
       console.error('Chyba pri načítaní poll:', error);

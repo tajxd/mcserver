@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Alert, Modal } from 'react-bootstrap';
 import axios from 'axios';
 import { API_URL } from '../config';
@@ -14,6 +14,20 @@ export default function Home({ whitelist, onWhitelistUpdate }) {
   const [messageType, setMessageType] = useState('');
   const [refreshGallery, setRefreshGallery] = useState(0);
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const [activePolls, setActivePolls] = useState([]);
+
+  useEffect(() => {
+    fetchActivePolls();
+  }, []);
+
+  const fetchActivePolls = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/polls/public/all`);
+      setActivePolls(response.data);
+    } catch (error) {
+      console.error('Chyba pri načítaní hlasovaní:', error);
+    }
+  };
 
   const handleUploadSuccess = () => {
     setRefreshGallery(prev => prev + 1);
@@ -151,9 +165,6 @@ export default function Home({ whitelist, onWhitelistUpdate }) {
               >
                 <i className="fas fa-upload"></i> Nahrať Highlight
               </button>
-
-              {/* Poll Widget */}
-              <PollWidget />
             </Col>
 
             {/* RIGHT: Highlights Gallery */}
@@ -161,6 +172,24 @@ export default function Home({ whitelist, onWhitelistUpdate }) {
               <HighlightsGallery key={refreshGallery} />
             </Col>
           </Row>
+
+          {/* Active Polls Section - Centrované */}
+          {activePolls.length > 0 && (
+            <Row className="mt-5">
+              <Col lg={8} md={10} className="mx-auto">
+                <div className="polls-container">
+                  <h3 className="polls-title">
+                    <i className="fas fa-poll"></i> Aktívne Hlasovania
+                  </h3>
+                  <div className="polls-grid">
+                    {activePolls.map((poll) => (
+                      <PollWidget key={poll._id} pollId={poll._id} />
+                    ))}
+                  </div>
+                </div>
+              </Col>
+            </Row>
+          )}
         </Container>
       </section>
 

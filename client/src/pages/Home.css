@@ -286,6 +286,53 @@
   max-width: 100%;
 }
 
+/* Active Polls Section */
+.polls-container {
+  margin-top: 40px;
+  padding: 30px;
+  background: rgba(13, 40, 24, 0.4);
+  border-radius: 16px;
+  border: 2px solid rgba(63, 181, 73, 0.3);
+}
+
+.polls-title {
+  text-align: center;
+  color: var(--mc-bright-green);
+  font-size: 2rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  margin-bottom: 30px;
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
+}
+
+.polls-title i {
+  margin-right: 12px;
+  color: #ffd700;
+}
+
+.polls-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 25px;
+}
+
+@media (min-width: 992px) {
+  .polls-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .polls-container {
+    padding: 20px 15px;
+  }
+  
+  .polls-title {
+    font-size: 1.5rem;
+  }
+}
+
 /* Features sekcia */
 .features-section {
   padding: 100px 20px;

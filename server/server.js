@@ -389,6 +389,16 @@ app.get('/api/polls/active', async (req, res) => {
   }
 });
 
+// Verejný endpoint: Získať všetky aktívne polly
+app.get('/api/polls/public/all', async (req, res) => {
+  try {
+    const polls = await Poll.find({ active: true }).sort({ createdAt: -1 });
+    res.json(polls);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 app.get('/api/polls', async (req, res) => {
   try {
     const { username, password } = req.query;
@@ -399,6 +409,21 @@ app.get('/api/polls', async (req, res) => {
 
     const polls = await Poll.find({}).sort({ createdAt: -1 });
     res.json(polls);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Získať jednotlivý poll podľa ID (verejný prístup)
+app.get('/api/polls/:id', async (req, res) => {
+  try {
+    const poll = await Poll.findById(req.params.id);
+    
+    if (!poll) {
+      return res.status(404).json({ error: 'Poll nenájdený' });
+    }
+
+    res.json(poll);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
