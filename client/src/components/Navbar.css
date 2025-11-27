@@ -63,12 +63,20 @@
 }
 
 .navbar-toggler {
-  border-color: var(--mc-bright-green) !important;
-  color: var(--mc-bright-green) !important;
+  border: 2px solid var(--mc-bright-green) !important;
+  background: rgba(63, 181, 73, 0.1) !important;
+  padding: 8px 12px !important;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%233fb549' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+  width: 24px !important;
+  height: 24px !important;
 }
 
 .navbar-toggler:focus {
-  box-shadow: 0 0 8px rgba(63, 181, 73, 0.5) !important;
+  box-shadow: 0 0 12px rgba(63, 181, 73, 0.6) !important;
+  outline: none !important;
 }
 
 @keyframes glow {
@@ -77,6 +85,56 @@
   }
   50% {
     text-shadow: 0 0 15px rgba(63, 181, 73, 1), 2px 2px 4px rgba(0, 0, 0, 0.8);
+  }
+}
+
+@media (max-width: 992px) {
+  .navbar-collapse {
+    background: linear-gradient(135deg, rgba(13, 40, 24, 0.98) 0%, rgba(26, 71, 42, 0.98) 100%);
+    border: 2px solid var(--mc-bright-green);
+    border-radius: 8px;
+    margin-top: 15px;
+    padding: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  }
+
+  .nav-items {
+    gap: 0 !important;
+    margin-top: 0 !important;
+    width: 100%;
+  }
+
+  .nav-link-custom {
+    padding: 14px 20px !important;
+    font-size: 1rem !important;
+    width: 100%;
+    text-align: left;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .nav-link-custom i {
+    margin-right: 12px;
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+  }
+
+  .nav-link-custom:last-child {
+    margin-bottom: 0;
+  }
+
+  .nav-link-admin {
+    background: linear-gradient(145deg, rgba(255, 215, 0, 0.25), rgba(255, 215, 0, 0.15));
+    border: 2px solid rgba(255, 215, 0, 0.5);
+  }
+
+  .nav-link-admin:hover {
+    background: linear-gradient(145deg, rgba(255, 215, 0, 0.4), rgba(255, 215, 0, 0.25));
+    border-color: var(--mc-gold);
   }
 }
 
@@ -89,21 +147,13 @@
     font-size: 0.9rem;
   }
 
-  .nav-items {
-    gap: 10px;
-    margin-top: 15px;
-    width: 100%;
+  .minecraft-navbar {
+    padding: 12px 0 !important;
   }
 
   .nav-link-custom {
-    padding: 10px 12px !important;
-    font-size: 0.9rem;
-    width: 100%;
-    text-align: center;
-  }
-
-  .minecraft-navbar {
-    padding: 10px 0 !important;
+    padding: 12px 18px !important;
+    font-size: 0.95rem !important;
   }
 }
 
@@ -112,8 +162,27 @@
     font-size: 0.9rem;
   }
 
-  .nav-link-custom {
+  .navbar-brand-custom i {
+    font-size: 1rem;
+    margin-right: 8px !important;
+  }
+
+  .brand-text {
     font-size: 0.85rem;
-    padding: 8px 10px !important;
+  }
+
+  .nav-link-custom {
+    font-size: 0.9rem !important;
+    padding: 12px 16px !important;
+  }
+
+  .nav-link-custom i {
+    font-size: 1rem;
+    margin-right: 10px;
+  }
+
+  .navbar-collapse {
+    padding: 12px;
+    margin-top: 12px;
   }
 }
