@@ -335,13 +335,12 @@ app.post('/api/highlights', express.json({ limit: '100mb' }), async (req, res) =
     const filePath = path.join('uploads', `${timestamp}-${fileName}`);
     fs.writeFileSync(filePath, buffer);
 
-    // Vytvorenie záznamu
-    const baseUrl = process.env.BACKEND_URL || 'https://mcserver-production-7a92.up.railway.app';
+    // Vytvorenie záznamu - ulož len relatívnu cestu
     const highlight = new Highlights({
       title,
       description,
       fileType,
-      filePath: `${baseUrl}/uploads/${timestamp}-${fileName}`,
+      filePath: `/uploads/${timestamp}-${fileName}`,
       uploadedBy: uploadedBy || 'Anonymous',
       featured: false
     });
@@ -367,10 +366,10 @@ app.delete('/api/highlights/:id', async (req, res) => {
       return res.status(404).json({ error: 'Highlight nenájdený' });
     }
 
-    // Vymazanie súboru
-    const filePath = path.join('.', highlight.filePath);
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
+    // Vymazanie súboru - filePath je už /uploads/filename
+    const localFilePath = path.join('.', highlight.filePath.replace(/^\//, ''));
+    if (fs.existsSync(localFilePath)) {
+      fs.unlinkSync(localFilePath);
     }
 
     res.json({ success: true, message: 'Highlight vymazaný' });

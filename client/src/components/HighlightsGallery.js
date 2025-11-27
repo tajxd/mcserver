@@ -13,9 +13,11 @@ export default function HighlightsGallery() {
   const fetchHighlights = async () => {
     try {
       const response = await axios.get(`${API_URL}/api/highlights`);
+      console.log('Highlights response:', response.data);
       setHighlights(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Failed to fetch highlights:', error);
+      console.error('Error details:', error.response?.data);
       setHighlights([]);
     } finally {
       setLoading(false);
@@ -31,7 +33,9 @@ export default function HighlightsGallery() {
     // Ak už obsahuje http, vráť ako je
     if (filePath.startsWith('http')) return filePath;
     // Inak pridaj backend URL
-    return `${API_URL}${filePath}`;
+    const fullPath = `${API_URL}${filePath}`;
+    console.log('Generated file path:', fullPath);
+    return fullPath;
   };
 
   const handleShowModal = (highlight) => {
@@ -76,7 +80,19 @@ export default function HighlightsGallery() {
                 <div className="highlight-thumbnail">
                   {highlight.fileType === 'image' ? (
                     <>
-                      <img src={getFilePath(highlight.filePath)} alt={highlight.title} />
+                      <img 
+                        src={getFilePath(highlight.filePath)} 
+                        alt={highlight.title}
+                        onError={(e) => {
+                          console.error('Image load error:', highlight.filePath);
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'flex';
+                        }}
+                      />
+                      <div className="image-error" style={{ display: 'none', alignItems: 'center', justifyContent: 'center', height: '200px', background: 'rgba(255,0,0,0.1)' }}>
+                        <i className="fas fa-exclamation-triangle" style={{ color: '#ff6b6b' }}></i>
+                        <span style={{ marginLeft: '10px', color: '#ff6b6b' }}>Obrázok sa nenačítal</span>
+                      </div>
                       <div className="highlight-badge">
                         <i className="fas fa-image"></i>
                       </div>
@@ -89,6 +105,9 @@ export default function HighlightsGallery() {
                         style={{ maxHeight: '200px', objectFit: 'cover' }}
                         muted
                         playsInline
+                        onError={(e) => {
+                          console.error('Video load error:', highlight.filePath);
+                        }}
                       >
                         <source src={getFilePath(highlight.filePath)} type="video/mp4" />
                       </video>
