@@ -218,6 +218,24 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
     }
   };
 
+  const handleTogglePollActive = async (id) => {
+    try {
+      await axios.patch(`${API_URL}/api/polls/${id}/toggle-active`, {
+        username: savedUsername,
+        password: savedPassword
+      });
+      
+      setMessageType('success');
+      setMessage('Status hlasovania zmenený!');
+      fetchPolls();
+      setTimeout(() => setMessage(''), 5000);
+    } catch (error) {
+      setMessageType('danger');
+      setMessage(error.response?.data?.error || 'Chyba pri zmene statusu');
+      setTimeout(() => setMessage(''), 5000);
+    }
+  };
+
   const handleLogout = () => {
     setIsAuthenticated(false);
     setUsername('');
@@ -413,7 +431,15 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
                           <span><i className="fas fa-users"></i> Celkom hlasov: {totalVotes}</span>
                           <div className="poll-actions">
                             <button
-                              className={`btn btn-sm ${poll.showResults ? 'btn-warning' : 'btn-success'}`}
+                              className={`btn btn-sm ${poll.active ? 'btn-secondary' : 'btn-success'}`}
+                              onClick={() => handleTogglePollActive(poll._id)}
+                              title={poll.active ? 'Deaktivovať hlasovanie' : 'Aktivovať hlasovanie'}
+                            >
+                              <i className={`fas ${poll.active ? 'fa-pause' : 'fa-play'}`}></i>
+                              {poll.active ? ' Deaktivovať' : ' Aktivovať'}
+                            </button>
+                            <button
+                              className={`btn btn-sm ${poll.showResults ? 'btn-warning' : 'btn-info'}`}
                               onClick={() => handleTogglePollResults(poll._id)}
                               title={poll.showResults ? 'Skryť výsledky' : 'Zobraziť výsledky'}
                             >

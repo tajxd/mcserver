@@ -437,8 +437,8 @@ app.post('/api/polls', async (req, res) => {
       return res.status(401).json({ error: 'Nesprávne prihlasovacie údaje' });
     }
 
-    // Deaktivuj všetky staré polls
-    await Poll.updateMany({}, { active: false });
+    // Už NEDEAKTIVUJEME staré hlasovania automaticky
+    // await Poll.updateMany({}, { active: false });
 
     const endsAt = duration ? new Date(Date.now() + duration * 60 * 60 * 1000) : null;
 
@@ -519,6 +519,29 @@ app.patch('/api/polls/:id/toggle-results', async (req, res) => {
     }
 
     poll.showResults = !poll.showResults;
+    await poll.save();
+    
+    res.json({ success: true, data: poll });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Toggle active status for poll (aktivácia/deaktivácia)
+app.patch('/api/polls/:id/toggle-active', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    
+    if (username !== process.env.ADMIN_USERNAME || password !== process.env.ADMIN_PASSWORD) {
+      return res.status(401).json({ error: 'Nesprávne prihlasovacie údaje' });
+    }
+
+    const poll = await Poll.findById(req.params.id);
+    if (!poll) {
+      return res.status(404).json({ error: 'Poll nenájdený' });
+    }
+
+    poll.active = !poll.active;
     await poll.save();
     
     res.json({ success: true, data: poll });
