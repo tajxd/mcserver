@@ -315,11 +315,25 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 25px;
+  max-width: 100%;
 }
 
+/* Ak je len jedno hlasovanie, centruj ho s max šírkou */
+.polls-grid > :only-child {
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Ak sú 2 alebo viac hlasovaní na veľkých obrazovkách */
 @media (min-width: 992px) {
   .polls-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  }
+  
+  /* Reset pre jedno hlasovanie */
+  .polls-grid > :only-child {
+    grid-column: 1 / -1;
   }
 }
 
@@ -330,6 +344,11 @@
   
   .polls-title {
     font-size: 1.5rem;
+  }
+  
+  /* Na mobile vždy full šírka */
+  .polls-grid > :only-child {
+    max-width: 100%;
   }
 }
 

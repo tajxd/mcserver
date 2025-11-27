@@ -103,7 +103,7 @@ export default function PollWidget({ pollId }) {
   }
 
   const totalVotes = poll.options.reduce((sum, opt) => sum + opt.votes, 0);
-  const canVote = !hasVoted && !pollEnded;
+  const canVote = !hasVoted && !pollEnded && !poll.showResults;
   const showVoteResults = hasVoted || poll.showResults || pollEnded;
 
   return (
@@ -162,9 +162,13 @@ export default function PollWidget({ pollId }) {
         })}
       </div>
 
-      {hasVoted && !pollEnded && (
+      {showVoteResults && !pollEnded && (
         <div className="poll-footer">
-          <i className="fas fa-check-circle"></i> Ďakujeme za tvoj hlas! Celkovo hlasov: {totalVotes}
+          {hasVoted ? (
+            <><i className="fas fa-check-circle"></i> Ďakujeme za tvoj hlas! Celkovo hlasov: {totalVotes}</>
+          ) : (
+            <><i className="fas fa-eye"></i> Výsledky sú viditeľné. Celkovo hlasov: {totalVotes}</>
+          )}
         </div>
       )}
 
