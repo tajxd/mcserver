@@ -29,10 +29,16 @@ export default function HighlightsGallery() {
   }, []);
 
   const getFilePath = (filePath) => {
-    if (!filePath) return '';
+    if (!filePath) {
+      console.error('No filePath provided');
+      return '';
+    }
     // Ak už obsahuje http, vráť ako je
-    if (filePath.startsWith('http')) return filePath;
-    // Ak path začína s /, priamo pridaj API_URL
+    if (filePath.startsWith('http')) {
+      console.log('Full URL path:', filePath);
+      return filePath;
+    }
+    // Ak path začína s /, priamo pridaj API_URL (už obsahuje /uploads/)
     if (filePath.startsWith('/')) {
       const fullPath = `${API_URL}${filePath}`;
       console.log('Generated file path:', fullPath);
@@ -40,7 +46,7 @@ export default function HighlightsGallery() {
     }
     // Inak pridaj /uploads/ pred cestu
     const fullPath = `${API_URL}/uploads/${filePath}`;
-    console.log('Generated file path:', fullPath);
+    console.log('Generated file path with /uploads/:', fullPath);
     return fullPath;
   };
 
@@ -90,14 +96,15 @@ export default function HighlightsGallery() {
                         src={getFilePath(highlight.filePath)} 
                         alt={highlight.title}
                         onError={(e) => {
-                          console.error('Image load error:', highlight.filePath);
+                          console.error('Image load error for:', highlight.filePath);
+                          console.error('Attempted URL:', e.target.src);
                           e.target.style.display = 'none';
-                          e.target.nextSibling.style.display = 'flex';
+                          const errorDiv = e.target.parentElement.querySelector('.image-error');
+                          if (errorDiv) errorDiv.style.display = 'flex';
                         }}
                       />
-                      <div className="image-error" style={{ display: 'none', alignItems: 'center', justifyContent: 'center', height: '200px', background: 'rgba(255,0,0,0.1)' }}>
-                        <i className="fas fa-exclamation-triangle" style={{ color: '#ff6b6b' }}></i>
-                        <span style={{ marginLeft: '10px', color: '#ff6b6b' }}>Obrázok sa nenačítal</span>
+                      <div className="image-error" style={{ display: 'none', alignItems: 'center', justifyContent: 'center', height: '100%', background: 'rgba(255,0,0,0.1)' }}>
+                        <i className="fas fa-exclamation-triangle" style={{ color: '#ff6b6b', fontSize: '1.2rem' }}></i>
                       </div>
                       <div className="highlight-badge">
                         <i className="fas fa-image"></i>
@@ -107,12 +114,14 @@ export default function HighlightsGallery() {
                     <>
                       <video 
                         width="100%" 
-                        height="auto" 
-                        style={{ maxHeight: '200px', objectFit: 'cover' }}
+                        height="100%" 
+                        style={{ objectFit: 'cover' }}
                         muted
                         playsInline
+                        preload="metadata"
                         onError={(e) => {
-                          console.error('Video load error:', highlight.filePath);
+                          console.error('Video load error for:', highlight.filePath);
+                          console.error('Attempted URL:', e.target.querySelector('source')?.src);
                         }}
                       >
                         <source src={getFilePath(highlight.filePath)} type="video/mp4" />
