@@ -5,10 +5,18 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
+const cloudinary = require('cloudinary').v2;
 require('dotenv').config();
 
 const app = express();
 const axios = require('axios');
+
+// Cloudinary konfigurácia
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 // Function to generate offline UUID (Minecraft format)
 function offlineUUID(name) {
@@ -326,21 +334,19 @@ app.post('/api/highlights', express.json({ limit: '100mb' }), async (req, res) =
       return res.status(400).json({ error: 'Všetky polia sú povinné' });
     }
 
-    // Konverzia base64 do bufferu
-    const base64Data = fileData.replace(/^data:[^;]+;base64,/, '');
-    const buffer = Buffer.from(base64Data, 'base64');
-    
-    // Uloženie súboru
-    const timestamp = Date.now();
-    const filePath = path.join('uploads', `${timestamp}-${fileName}`);
-    fs.writeFileSync(filePath, buffer);
+    // Upload na Cloudinary
+    const uploadResult = await cloudinary.uploader.upload(fileData, {
+      resource_type: fileType === 'image' ? 'image' : 'video',
+      folder: 'mcserver-highlights',
+      public_id: `${Date.now()}-${fileName.replace(/\.[^/.]+$/, '')}`,
+    });
 
-    // Vytvorenie záznamu - ulož len relatívnu cestu
+    // Vytvorenie záznamu - ulož Cloudinary URL
     const highlight = new Highlights({
       title,
       description,
       fileType,
-      filePath: `/uploads/${timestamp}-${fileName}`,
+      filePath: uploadResult.secure_url,
       uploadedBy: uploadedBy || 'Anonymous',
       featured: false
     });
@@ -348,6 +354,7 @@ app.post('/api/highlights', express.json({ limit: '100mb' }), async (req, res) =
     await highlight.save();
     res.status(201).json({ success: true, data: highlight });
   } catch (error) {
+    console.error('Highlight upload error:', error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -366,10 +373,18 @@ app.delete('/api/highlights/:id', async (req, res) => {
       return res.status(404).json({ error: 'Highlight nenájdený' });
     }
 
-    // Vymazanie súboru - filePath je už /uploads/filename
-    const localFilePath = path.join('.', highlight.filePath.replace(/^\//, ''));
-    if (fs.existsSync(localFilePath)) {
-      fs.unlinkSync(localFilePath);
+    // Vymazanie z Cloudinary ak je to Cloudinary URL
+    if (highlight.filePath && highlight.filePath.includes('cloudinary.com')) {
+      try {
+        const urlParts = highlight.filePath.split('/');
+        const publicIdWithExt = urlParts.slice(urlParts.indexOf('mcserver-highlights')).join('/');
+        const publicId = publicIdWithExt.replace(/\.[^/.]+$/, ''); // odstráň príponu
+        await cloudinary.uploader.destroy(publicId, {
+          resource_type: highlight.fileType === 'image' ? 'image' : 'video'
+        });
+      } catch (cloudError) {
+        console.error('Cloudinary delete error:', cloudError);
+      }
     }
 
     res.json({ success: true, message: 'Highlight vymazaný' });
