@@ -20,6 +20,10 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
   const [pollQuestion, setPollQuestion] = useState('');
   const [pollOptions, setPollOptions] = useState(['', '']);
   const [pollDuration, setPollDuration] = useState(''); // v hodinách
+  
+  // Uložené credentials pre API volania po prihlásení
+  const [savedUsername, setSavedUsername] = useState('');
+  const [savedPassword, setSavedPassword] = useState('');
 
   const getFilePath = (filePath) => {
     if (!filePath) return '';
@@ -35,6 +39,10 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
       await axios.post(`${API_URL}/api/admin/login`, { username, password });
       setIsAuthenticated(true);
       setMessage('');
+      // Ulož credentials pre neskoršie použitie
+      setSavedUsername(username);
+      setSavedPassword(password);
+      // Vymaž input fields
       setUsername('');
       setPassword('');
     } catch (error) {
@@ -53,8 +61,8 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
 
     try {
       await axios.post(`${API_URL}/api/admin/whitelist/${id}`, { 
-        username: process.env.REACT_APP_ADMIN_USERNAME || 'Admin',
-        password: process.env.REACT_APP_ADMIN_PASSWORD || 'mcserver256i'
+        username: savedUsername,
+        password: savedPassword
       });
       onWhitelistUpdate();
       setMessageType('success');
@@ -71,8 +79,8 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
     try {
       const response = await axios.get(`${API_URL}/api/highlights/pending/all`, {
         params: {
-          username: 'Admin',
-          password: 'mcserver256i'
+          username: savedUsername,
+          password: savedPassword
         }
       });
       setPendingHighlights(response.data.pending);
@@ -86,8 +94,8 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
     try {
       const response = await axios.get(`${API_URL}/api/polls`, {
         params: {
-          username: 'Admin',
-          password: 'mcserver256i'
+          username: savedUsername,
+          password: savedPassword
         }
       });
       setPolls(response.data);
@@ -99,8 +107,8 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
   const handleApproveHighlight = async (id) => {
     try {
       await axios.post(`${API_URL}/api/highlights/${id}/approve`, {
-        username: 'Admin',
-        password: 'mcserver256i'
+        username: savedUsername,
+        password: savedPassword
       });
       setMessageType('success');
       setMessage('Highlight bol schválený!');
@@ -121,8 +129,8 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
     try {
       await axios.delete(`${API_URL}/api/highlights/${id}`, {
         data: {
-          username: 'Admin',
-          password: 'mcserver256i'
+          username: savedUsername,
+          password: savedPassword
         }
       });
       setMessageType('success');
@@ -146,8 +154,8 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
 
     try {
       await axios.post(`${API_URL}/api/polls`, {
-        username: 'Admin',
-        password: 'mcserver256i',
+        username: savedUsername,
+        password: savedPassword,
         question: pollQuestion,
         options: validOptions,
         duration: pollDuration ? parseFloat(pollDuration) : null
@@ -176,8 +184,8 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
     try {
       await axios.delete(`${API_URL}/api/polls/${id}`, {
         data: {
-          username: 'Admin',
-          password: 'mcserver256i'
+          username: savedUsername,
+          password: savedPassword
         }
       });
       
@@ -195,8 +203,8 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
   const handleTogglePollResults = async (id) => {
     try {
       await axios.patch(`${API_URL}/api/polls/${id}/toggle-results`, {
-        username,
-        password
+        username: savedUsername,
+        password: savedPassword
       });
       
       setMessageType('success');
@@ -214,6 +222,8 @@ export default function Admin({ whitelist, onWhitelistUpdate }) {
     setIsAuthenticated(false);
     setUsername('');
     setPassword('');
+    setSavedUsername('');
+    setSavedPassword('');
     setMessage('');
   };
 
